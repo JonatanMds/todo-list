@@ -2,22 +2,16 @@
 import CardTask from "@/components/CardTask";
 import { useState } from "react"
 
-interface ITask {
+interface Task {
   id: number,
-  nameTask: string 
+  textTask: string 
 }
 
 export default function Home() {
 
   const [task, setTask] = useState('')
-  const [listTasks, setListTasks] = useState<ITask[]>([])
-  // const addTodos = (todo: any)=>{
-  //   if(!todo.text || /^\s*$/.test(todo.text)){
-  //     return;
-  //   }
-  // }
+  const [listTasks, setListTasks] = useState<Task[]>([])
   
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
     setTask(e.target.value)
   }
@@ -25,7 +19,7 @@ export default function Home() {
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) =>{
     e.preventDefault();
     
-    const newTask = {id: Math.random(), nameTask: task}
+    const newTask = {id: Math.random(), textTask: task}
     setListTasks([...listTasks, newTask])
     
     setTask('')
@@ -34,12 +28,6 @@ export default function Home() {
   const deleteTask=(deletar: number)=>{
     setListTasks(listTasks.filter((id)=> id.id !== deletar))
   }
-
-  // const editTask=(id: number, newPost: string)=>{
-  //   const task: any = listTasks.find((idTask)=>{return idTask.id === id})
-  //   task.nameTask = newPost;
-  // }
-
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-[#79b7e0] text-white">
@@ -54,20 +42,18 @@ export default function Home() {
                   value={task}
                   name="text"
                   onChange={handleChange}
-                  className='bg-[#27274d] p-2 outline-none' />
-              <button className="rounded bg-[#414165] p-2" disabled={task? false : true} type="submit">Add Todo</button>
+                  className="bg-[#27274d] p-2 outline-none" />
+              <button className={`rounded bg-[#414165] p-2  cursor-pointer ${task?'hover:bg-[#5f5f94]':'cursor-not-allowed'}`} disabled={task? false : true} type="submit">Add Todo</button>
             </div>
         </form>
-        <div className="h-[50vh] bg-[#302f57] overflow-auto">
-          <div className="flex flex-col gap-2 p-6">{listTasks.map((prop, key)=>{
+        <div className="h-[50vh] bg-[#302f57] overflow-auto rounded-b-lg">
+          <div className="flex flex-col gap-2 p-6">{listTasks.map((task)=>{
             return (
-              // <div key={key}>
-              <CardTask
-                key={key}
-                cardTask={prop.nameTask} 
-                onDeleteAction={()=>deleteTask(prop.id)} 
-              />
-              // </div>
+                <CardTask
+                  key={task.id}
+                  textTask={task.textTask} 
+                  onDeleteAction={()=>deleteTask(task.id)} 
+                />
             )
           })}</div>
         </div>
